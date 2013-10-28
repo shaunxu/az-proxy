@@ -1,0 +1,6 @@
+{
+    "port": "12345",
+    "intermediateProxyHost": "",
+    "intermediateProxyPort": "",
+    "logLevel": "debug"
+}

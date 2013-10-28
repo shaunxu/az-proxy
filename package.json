@@ -1,0 +1,8 @@
+{
+    "name": "az-proxy",
+    "version": "0.0.1",
+    "title": "az-proxy",
+    "description": "Simple HTTP/HTTPS proxy in node.js on Windows Azure",
+    "dependencies": {
+    }
+}

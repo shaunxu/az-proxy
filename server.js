@@ -1,17 +1,29 @@
 var http = require('http');
-var util = require('util');
+var config = require('./config.json');
+
+var port = config.port > 0 ? config.port : process.env.PORT;
+var intermediateProxyHost = config.intermediateProxyHost == '' ? null : config.intermediateProxyHost;
+var intermediateProxyPort = config.intermediateProxyPort > 0 ? null : config.intermediateProxyPort;
 
 http.createServer(function (req, res) {
-    console.log('client -> node-proxy: [' + req.method + '] ' + req.url);
+    console.log('client -> az-proxy: [' + req.method + '] ' + req.url);
 
-    var innerRequest = http.request({
-        host: '127.0.0.1',
-        port: 3128,
+    var options = {
+        host: intermediateProxyHost || req.headers.host,
         path: req.url,
         method: req.method,
         headers: req.headers
-    }, function (innerResponse) {
-        console.log('remote -> node-proxy: [' + innerResponse.statusCode + '] ' + innerResponse.req.path);
+    };
+    if (intermediateProxyPort) {
+        options.port = intermediateProxyPort;
+    }
+    if (options.headers['Proxy-Connection']) {
+        options.headers['Connection'] = options.headers['Proxy-Connection'];
+        delete options.headers['Proxy-Connection'];
+    }
+    console.log(options);
+    var innerRequest = http.request(options, function (innerResponse) {
+        console.log('remote -> az-proxy: [' + innerResponse.statusCode + '] ' + innerResponse.req.path);
 
         res.statusCode = innerResponse.statusCode;
         for (var headerName in innerResponse.headers) {
@@ -27,6 +39,6 @@ http.createServer(function (req, res) {
 
     req.pipe(innerRequest);
 
-}).listen(12345, '127.0.0.1');
+}).listen(port);
 
-console.log('Server running at http://127.0.0.1:12345/');
+console.log('az-proxy is listening on port ' + port);
