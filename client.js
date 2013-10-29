@@ -23,6 +23,7 @@ http.createServer(function (req, res) {
         res.end('PONG!');
     }
     else {
+        console.log(req);
         // random select a proxy (host) from configuration proxy list
         var proxy = getProxy(config.azProxies);
         var options = {
@@ -55,7 +56,7 @@ http.createServer(function (req, res) {
 
         innerRequest.on('error', function (error) {
             res.writeHead(500, {'Content-Type': 'text/plain'});
-            res.end(error.toString());
+            res.end('[client] ' + error.toString());
         });
 
         req.pipe(innerRequest);
