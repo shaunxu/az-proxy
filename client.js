@@ -64,4 +64,4 @@ http.createServer(function (req, res) {
     }
 }).listen(port);
 
-console.log('az-proxy is listening on port ' + port);
+console.log('az-proxy client is listening on port ' + port);
