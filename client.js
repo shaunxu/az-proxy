@@ -49,7 +49,7 @@ http.createServer(function (req, res) {
         console.log(JSON.stringify({ 'send-options': options }, null, 2));
         // build inner request to send to the az proxy server
         var innerRequest = http.request(options, function (innerResponse) {
-            console.log('[' + innerResponse.statusCode + '] ' + innerResponse.req.path);
+            console.log('[' + innerResponse.statusCode + '] ' + req.url);
 
             res.statusCode = innerResponse.statusCode;
             for (var headerName in innerResponse.headers) {

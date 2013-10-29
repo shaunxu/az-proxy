@@ -11,7 +11,7 @@ http.createServer(function (req, res) {
         var originalHeaders = JSON.parse(req.headers['az-proxy-original-headers']);
         var options = {
             host: originalUrl.host,
-            path: originalUrl.pathname,
+            path: req.headers['az-proxy-original-url'],
             method: req.method,
             headers: originalHeaders
         };
