@@ -8,16 +8,17 @@ var port = config.port == '' ? process.env.PORT : config.port;
 http.createServer(function (req, res) {
     if (req.headers['az-proxy-original-url'] && options.headers['az-proxy-original-headers']) {
         var originalUrl = url.parse(req.headers['az-proxy-original-url']);
-        var originalHeaders = JSON.parse(req.headers['az-proxy-original-headers']);
+        // var originalHeaders = JSON.parse(req.headers['az-proxy-original-headers']);
         var options = {
             host: originalUrl.host,
             path: originalUrl.pathname,
             method: req.method,
-            headers: originalHeaders
+            headers: req.headers
         };
 
         res.writeHead(200, {'Content-Type': 'text/plain'});
-        res.end(JSON.stringify({ 'request-header': req.headers, 'send-options': options }, null, 2));
+        res.end(req.headers['az-proxy-original-headers'], null, 2));
+        // res.end(JSON.stringify({ 'request-header': req.headers, 'send-options': options }, null, 2));
 
         // var innerRequest = http.request(options, function (innerResponse) {
         //     console.log('[' + innerResponse.statusCode + '] ' + innerResponse.req.path);
