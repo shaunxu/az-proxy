@@ -1,7 +1,7 @@
 var http = require('http');
 var config = require('./config.json');
 
-var port = config.port > 0 ? config.port : process.env.PORT;
+var port = config.port == '' ? process.env.PORT : config.port;
 var intermediateProxyHost = config.intermediateProxyHost == '' ? null : config.intermediateProxyHost;
 var intermediateProxyPort = config.intermediateProxyPort == '' ? null : config.intermediateProxyPort;
 
