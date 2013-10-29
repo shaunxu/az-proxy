@@ -16,24 +16,23 @@ http.createServer(function (req, res) {
             headers: originalHeaders
         };
 
-        res.writeHead(200, {'Content-Type': 'text/plain'});
-        // res.end(req.headers['az-proxy-original-headers'], null, 2));
-        res.end(JSON.stringify({ 'request-header': req.headers, 'send-options': options }, null, 2));
+        // res.writeHead(200, {'Content-Type': 'text/plain'});
+        // res.end(JSON.stringify({ 'request-header': req.headers, 'send-options': options }, null, 2));
 
-        // var innerRequest = http.request(options, function (innerResponse) {
-        //     console.log('[' + innerResponse.statusCode + '] ' + innerResponse.req.path);
+        var innerRequest = http.request(options, function (innerResponse) {
+            console.log('[' + innerResponse.statusCode + '] ' + innerResponse.req.path);
 
-        //     res.statusCode = innerResponse.statusCode;
-        //     for (var headerName in innerResponse.headers) {
-        //         res.setHeader(headerName, innerResponse.headers[headerName]);
-        //     }
-        //     innerResponse.pipe(res);
-        // });
-        // innerRequest.on('error', function (error) {
-        //     res.writeHead(200, {'Content-Type': 'text/plain'});
-        //     res.end('[server] ' + error.toString());
-        // });
-        // req.pipe(innerRequest);
+            res.statusCode = innerResponse.statusCode;
+            for (var headerName in innerResponse.headers) {
+                res.setHeader(headerName, innerResponse.headers[headerName]);
+            }
+            innerResponse.pipe(res);
+        });
+        innerRequest.on('error', function (error) {
+            res.writeHead(200, {'Content-Type': 'text/plain'});
+            res.end('[server] ' + error.toString());
+        });
+        req.pipe(innerRequest);
     }
     else {
         res.writeHead(200, {'Content-Type': 'text/plain'});
