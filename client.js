@@ -8,13 +8,15 @@ var enterpriseProxyPort = config.enterpriseProxyPort == '' ? null : config.enter
 
 var getProxy = function (proxies) {
     var length = proxies.length;
+    var proxy = '';
     if (length > 1) {
         var pos = Math.floor(Math.random() * length);
-        return proxies[pos];
+        proxy = proxies[pos];
     }
     else {
-        return proxies[0];
+        proxy = proxies[0];
     }
+    return 'http://' + proxy;
 };
 
 http.createServer(function (req, res) {
@@ -23,7 +25,6 @@ http.createServer(function (req, res) {
         res.end('PONG!');
     }
     else {
-        console.log(req);
         // random select a proxy (host) from configuration proxy list
         var proxy = getProxy(config.azProxies);
         var options = {
@@ -38,7 +39,7 @@ http.createServer(function (req, res) {
         // if we have enterprise proxy with port we need to set that port to request port
         // otherwise no need to set the port
         if (enterpriseProxyPort) {
-            options.port = port;
+            options.port = enterpriseProxyPort;
         }
         // move the original request url into header 'az-proxy-original-url'
         // so that in the server side it will retrieve the original url and send request

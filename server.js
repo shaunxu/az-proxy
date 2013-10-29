@@ -25,7 +25,7 @@ http.createServer(function (req, res) {
         });
 
         innerRequest.on('error', function (error) {
-            res.writeHead(500, {'Content-Type': 'text/plain'});
+            res.writeHead(200, {'Content-Type': 'text/plain'});
             res.end('[server] ' + error.toString());
         });
 
