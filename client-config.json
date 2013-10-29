@@ -1,0 +1,9 @@
+{
+    "port": "12345",
+    "enterpriseProxyHost": "127.0.0.1",
+    "enterpriseProxyPort": "3128",
+    "azProxies": [
+        "node-proxy.azurewebsites.net"
+    ],
+    "logLevel": "debug"
+}

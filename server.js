@@ -1,33 +1,21 @@
 var http = require('http');
-var config = require('./config.json');
+var url = require('url');
+var proxy = require('./proxy.js');
+var config = require('./server-config.json');
 
 var port = config.port == '' ? process.env.PORT : config.port;
-var intermediateProxyHost = config.intermediateProxyHost == '' ? null : config.intermediateProxyHost;
-var intermediateProxyPort = config.intermediateProxyPort == '' ? null : config.intermediateProxyPort;
 
 http.createServer(function (req, res) {
-    if (req.url == '/') {
-        res.writeHead(200, {'Content-Type': 'text/plain'});
-        res.end('PONG!');
-    }
-    else {
-        console.log('client -> az-proxy: [' + req.method + '] ' + req.url);
-
+    if (req.headers['az-proxy-original-url']) {
+        var originalUrl = url.parse(req.headers['az-proxy-original-url']);
         var options = {
-            host: intermediateProxyHost || req.headers.host,
-            path: req.url,
+            host: originalUrl.host,
+            path: originalUrl.pathname,
             method: req.method,
             headers: req.headers
         };
-        if (intermediateProxyPort) {
-            options.port = intermediateProxyPort;
-        }
-        if (options.headers['Proxy-Connection']) {
-            options.headers['Connection'] = options.headers['Proxy-Connection'];
-            delete options.headers['Proxy-Connection'];
-        }
         var innerRequest = http.request(options, function (innerResponse) {
-            console.log('remote -> az-proxy: [' + innerResponse.statusCode + '] ' + innerResponse.req.path);
+            console.log('[' + innerResponse.statusCode + '] ' + innerResponse.req.path);
 
             res.statusCode = innerResponse.statusCode;
             for (var headerName in innerResponse.headers) {
@@ -42,6 +30,10 @@ http.createServer(function (req, res) {
         });
 
         req.pipe(innerRequest);
+    }
+    else {
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.end('PONG!');
     }
 }).listen(port);
 
