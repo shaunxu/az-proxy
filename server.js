@@ -6,13 +6,14 @@ var config = require('./server-config.json');
 var port = config.port == '' ? process.env.PORT : config.port;
 
 http.createServer(function (req, res) {
-    if (req.headers['az-proxy-original-url']) {
+    if (req.headers['az-proxy-original-url'] && options.headers['az-proxy-original-headers']) {
         var originalUrl = url.parse(req.headers['az-proxy-original-url']);
+        var originalHeaders = JSON.parse(req.headers['az-proxy-original-headers']);
         var options = {
             host: originalUrl.host,
             path: originalUrl.pathname,
             method: req.method,
-            headers: req.headers
+            headers: originalHeaders
         };
 
         res.writeHead(200, {'Content-Type': 'text/plain'});
