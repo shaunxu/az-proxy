@@ -13,7 +13,7 @@ http.createServer(function (req, res) {
             host: originalUrl.host,
             path: originalUrl.pathname,
             method: req.method,
-            headers: req.headers
+            headers: originalHeaders
         };
 
         res.writeHead(200, {'Content-Type': 'text/plain'});
