@@ -3,7 +3,7 @@ var config = require('./config.json');
 
 var port = config.port > 0 ? config.port : process.env.PORT;
 var intermediateProxyHost = config.intermediateProxyHost == '' ? null : config.intermediateProxyHost;
-var intermediateProxyPort = config.intermediateProxyPort > 0 ? null : config.intermediateProxyPort;
+var intermediateProxyPort = config.intermediateProxyPort == '' ? null : config.intermediateProxyPort;
 
 http.createServer(function (req, res) {
     console.log('client -> az-proxy: [' + req.method + '] ' + req.url);
@@ -21,7 +21,6 @@ http.createServer(function (req, res) {
         options.headers['Connection'] = options.headers['Proxy-Connection'];
         delete options.headers['Proxy-Connection'];
     }
-    console.log(options);
     var innerRequest = http.request(options, function (innerResponse) {
         console.log('remote -> az-proxy: [' + innerResponse.statusCode + '] ' + innerResponse.req.path);
 
