@@ -12,13 +12,14 @@ http.createServer(function (req, res) {
         var options = {
             host: originalUrl.host,
             path: originalUrl.pathname,
-            method: req.method
+            method: req.method,
+            headers: originalHeaders
         };
-        for (var hName in originalHeaders) {
-            if (hName != 'az-proxy-original-url' && hName != 'az-proxy-original-headers') {
-                options.headers[hName] = originalHeaders[hName];
-            }
-        }
+        // for (var hName in originalHeaders) {
+        //     if (hName != 'az-proxy-original-url' && hName != 'az-proxy-original-headers') {
+        //         options.headers[hName] = originalHeaders[hName];
+        //     }
+        // }
 
         // res.writeHead(200, {'Content-Type': 'text/plain'});
         // res.end(JSON.stringify({ 'request-header': req.headers, 'send-options': options }, null, 2));

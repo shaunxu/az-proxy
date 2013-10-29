@@ -25,6 +25,7 @@ http.createServer(function (req, res) {
         res.end('PONG!');
     }
     else {
+        console.log(JSON.stringify({ 'request-header': req.headers }, null, 2));
         // random select a proxy (host) from configuration proxy list
         var proxy = getProxy(config.azProxies);
         var options = {
@@ -43,9 +44,9 @@ http.createServer(function (req, res) {
         }
         // move the original request url into header 'az-proxy-original-url'
         // so that in the server side it will retrieve the original url and send request
-        options.headers['az-proxy-original-url'] = req.url;
         options.headers['az-proxy-original-headers'] = JSON.stringify(req.headers);
-        console.log(JSON.stringify({ 'request-header': req.headers, 'send-options': options }, null, 2));
+        options.headers['az-proxy-original-url'] = req.url;
+        console.log(JSON.stringify({ 'send-options': options }, null, 2));
         // build inner request to send to the az proxy server
         var innerRequest = http.request(options, function (innerResponse) {
             console.log('[' + innerResponse.statusCode + '] ' + innerResponse.req.path);
