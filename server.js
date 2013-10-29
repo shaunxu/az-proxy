@@ -16,7 +16,7 @@ http.createServer(function (req, res) {
         };
 
         res.writeHead(200, {'Content-Type': 'text/plain'});
-        res.end(JSON.stringify(options, null, 2));
+        res.end(JSON.stringify({ 'request-header': req.headers, 'send-options': options }, null, 2));
 
         // var innerRequest = http.request(options, function (innerResponse) {
         //     console.log('[' + innerResponse.statusCode + '] ' + innerResponse.req.path);

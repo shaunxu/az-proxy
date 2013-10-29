@@ -44,6 +44,7 @@ http.createServer(function (req, res) {
         // move the original request url into header 'az-proxy-original-url'
         // so that in the server side it will retrieve the original url and send request
         options.headers['az-proxy-original-url'] = req.url;
+        console.log(JSON.stringify(options, null, 2));
         // build inner request to send to the az proxy server
         var innerRequest = http.request(options, function (innerResponse) {
             console.log('[' + innerResponse.statusCode + '] ' + innerResponse.req.path);
